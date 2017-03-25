@@ -1,14 +1,30 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
+  constructor() {
+    super();
+    this.state = {lista : []};
+  }
+
+  componentWillMount(){
+    $.ajax({
+        url:"http://localhost:3001/api/autores",
+        dataType: 'json',
+        success:function(resposta){
+          this.setState({lista:resposta});
+        }.bind(this)
+      }
+    );
+  }
+
   render() {
     return (
 <div id="layout">
 
     <a href="#menu" id="menuLink" className="menu-link">
-
         <span></span>
     </a>
 
@@ -20,9 +36,7 @@ class App extends Component {
                 <li className="pure-menu-item"><a href="#" className="pure-menu-link">Home</a></li>
                 <li className="pure-menu-item"><a href="#" className="pure-menu-link">Autor</a></li>
                 <li className="pure-menu-item"><a href="#" className="pure-menu-link">Livro</a></li>
-
-
-            </ul>
+          </ul>
         </div>
     </div>
 
@@ -61,10 +75,14 @@ class App extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Alberto</td>
-                      <td>alberto.souza@caelum.com.br</td>
-                    </tr>
+                    {
+                      this.state.lista.map(item =>
+                        <tr>
+                          <td>{item.nome}</td>
+                          <td>{item.email}</td>
+                        </tr>
+                      )
+                    }
                   </tbody>
                 </table>
               </div>
